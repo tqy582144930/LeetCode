@@ -164,3 +164,118 @@ public:
 ### 总结
 
 - 从后往前可以减少移动时间
+
+## 从尾到头打印链表
+
+### 题目
+
+输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+
+**示例 1：**
+
+```c++
+输入：head = [1,3,2]
+输出：[2,3,1]
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<int> reversePrint(ListNode* head) {
+        if (head == NULL) {
+            return vector<int>();
+        }
+        stack<int> st;
+        ListNode *ptr = head;
+        while (ptr != NULL) {
+            st.push(ptr->val);
+            ptr = ptr->next;
+        }
+        vector<int> ve;
+        while (!st.empty()) {
+            int val = st.top();
+            st.pop();
+            ve.push_back(val);
+        }
+        return ve;
+    }
+};
+
+// 时间复杂度 O(n)
+// 空间复杂度 O(n)
+```
+
+## 重建二叉树
+
+### 题目
+
+输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+
+例如，给出
+
+```c++
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+```
+
+
+返回如下的二叉树：
+
+```c++
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<int> pre;
+    vector<int> is;
+    int index;
+
+    int findIs(int val) {
+        int pos = -1;
+        for (int i = 0; i < is.size(); i++) {
+            if (is[i] == val) {
+                pos = i;
+                break;
+            }
+        }
+        return pos;
+    }
+
+    TreeNode *creatPI(int left, int right) {
+        if (left > right) {
+            return NULL;
+        }
+        TreeNode *node = new TreeNode(pre[index]);
+        int pos = findIs(pre[index]);
+        index++;
+        node->left = creatPI(left, pos - 1);
+        node->right = creatPI(pos + 1, right);
+        return node;
+    }
+
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        pre = preorder;
+        is = inorder;
+        index = 0;
+        if (preorder.empty() || inorder.empty()) {
+            return NULL;
+        } else {
+            return creatPI(0, inorder.size() - 1);
+        }
+    }
+};
+```
+
+### 总结
+
+- 前序：根节点+左节点+右节点
+- 中序：左节点+根节点+右节点
