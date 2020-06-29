@@ -279,3 +279,119 @@ public:
 
 - 前序：根节点+左节点+右节点
 - 中序：左节点+根节点+右节点
+
+## 用两个栈实现队列
+
+### 题目
+
+用两个栈实现一个队列。队列的声明如下，请实现它的两个函数 appendTail 和 deleteHead ，分别完成在队列尾部插入整数和在队列头部删除整数的功能。(若队列中没有元素，deleteHead 操作返回 -1 )
+
+```c++
+示例 1：
+
+输入：
+["CQueue","appendTail","deleteHead","deleteHead"]
+[[],[3],[],[]]
+输出：[null,null,3,-1]
+示例 2：
+
+输入：
+["CQueue","deleteHead","appendTail","appendTail","deleteHead","deleteHead"]
+[[],[],[5],[2],[],[]]
+输出：[null,-1,null,null,5,2]
+```
+
+### 题解
+
+```c++
+class CQueue {
+public:
+    stack<int> stack1, stack2;
+    CQueue() {
+        while (!stack1.empty()) {
+            stack1.pop();
+        }
+        while (!stack2.empty()) {
+            stack2.pop();
+        }
+    }
+    // 使用stack1用来接受新添加的元素
+    void appendTail(int value) {
+        stack1.push(value);
+    }
+    
+    // 使用stack2使得stack1里面的元素倒叙，再从stack2中弹出就满足先进先出
+    int deleteHead() {
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                int val = stack1.top();
+                stack1.pop();
+                stack2.push(val);
+            }
+        }
+        if (stack2.empty()) {
+            return -1;
+        } else {
+            int val = stack2.top();
+            stack2.pop();
+            return val;
+        }
+    }
+};
+
+// 时间复杂度：O(1)
+// 空间复杂度：O(n)：需要用两个栈来存储元素
+```
+
+## 斐波那契数列
+
+### 题目
+
+写一个函数，输入 n ，求斐波那契（Fibonacci）数列的第 n 项。斐波那契数列的定义如下：
+
+F(0) = 0,   F(1) = 1
+F(N) = F(N - 1) + F(N - 2), 其中 N > 1.
+斐波那契数列由 0 和 1 开始，之后的斐波那契数就是由之前的两数相加而得出。
+
+答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。 
+
+```c++
+示例 1：
+
+输入：n = 2
+输出：1
+示例 2：
+
+输入：n = 5
+输出：5
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int fib(int n) {
+        if (n < 0) {
+            return -1;
+        } else if (n == 0) {
+            return 0;
+        } else if (n == 1) {
+            return 1;
+        }
+        
+        int a = 0, b = 1;
+        int res = 0;
+        for (int i = 2; i <= n; i++) {
+            res = (a + b) % 1000000007;
+            a = b;
+            b = res;
+        }
+        return res;
+    }
+};
+
+// 时间复杂；O(n)
+// 空间复杂：O(1)
+```
+
