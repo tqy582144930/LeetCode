@@ -57,3 +57,110 @@ public:
   - 如果它和第m个数字相等，就返回
   - 否则，就把第i个数字和第m个数字交换，把m放置到属于它的位置
 
+## 二维数组中的查找
+
+### 题目
+
+在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+
+ 
+
+```c++
+示例:
+
+现有矩阵 matrix 如下：
+
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+给定 target = 5，返回 true。
+
+给定 target = 20，返回 false。
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    bool findNumberIn2DArray(vector<vector<int>>& matrix, int target) {
+        if (matrix.empty() || matrix.size() == 0 || matrix[0].size() == 0) {
+            return false;
+        }
+        int rows = matrix.size();
+        int colums = matrix[0].size();
+        int row = 0, colum = colums - 1;
+        while (row < rows && colum >= 0) {
+            if (matrix[row][colum] < target) {
+                row++;
+            } else if (matrix[row][colum] > target) {
+                colum--;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+// 时间复杂度：O(n+m) 访问到的下标的行最多增加 n 次，列最多减少 m 次，因此循环体最多执行 n + m 次。
+// 空间复杂度：O(1)
+```
+
+### 总结
+
+- 从二维数组的右上角开始查找。如果当前元素等于目标值，则返回 `true`。如果当前元素大于目标值，则移到左边一列。如果当前元素小于目标值，则移到下边一行。
+
+## 替换空格
+
+### 题目
+
+请实现一个函数，把字符串 s 中的每个空格替换成"%20"。
+
+```c++
+示例 1：
+
+输入：s = "We are happy."
+输出："We%20are%20happy."
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    string replaceSpace(string s) {
+        if (s.empty() || s.size() < 0) {
+            return string();
+        }
+
+        int indexOfOrigin = s.size() - 1;
+        for (int i = 0; i < s.size(); i++) {
+            if (s[i] == ' ') {
+                s += "00";
+            }
+        }
+
+        int indexOfNew = s.size() - 1;
+        while (indexOfOrigin >= 0 && indexOfNew > indexOfOrigin) {
+            if (s[indexOfOrigin] == ' ') {
+                s[indexOfNew--] = '0';
+                s[indexOfNew--] = '2';
+                s[indexOfNew--] = '%';
+            } else {
+                s[indexOfNew--] = s[indexOfOrigin];
+            }
+            indexOfOrigin--;
+        }
+        return s;
+    }
+};
+```
+
+### 总结
+
+- 从后往前可以减少移动时间
