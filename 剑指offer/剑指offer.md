@@ -395,3 +395,112 @@ public:
 // 空间复杂：O(1)
 ```
 
+## 青蛙跳台阶
+
+### 题目
+
+一只青蛙一次可以跳上1级台阶，也可以跳上2级台阶。求该青蛙跳上一个 n 级的台阶总共有多少种跳法。
+
+答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。
+
+```c++
+示例 1：
+
+输入：n = 2
+输出：2
+示例 2：
+
+输入：n = 7
+输出：21
+提示：
+
+0 <= n <= 100
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int numWays(int n) {
+        if (n < 0) {
+            return -1;
+        } else if (n == 0 || n == 1) {
+            return 1;
+        } else if (n == 2) {
+            return 2;
+        }
+        
+        int a = 1, b = 2;
+        int res = 0;
+        for (int i = 3; i <= n; i++) {
+            res = (a + b) % 1000000007;
+            a = b;
+            b = res;
+        }
+        return res;
+    }
+};
+```
+
+## 旋转数组的最小元素
+
+### 题目
+
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1。  
+
+```c++
+示例 1：
+
+输入：[3,4,5,1,2]
+输出：1
+示例 2：
+
+输入：[2,2,2,0,1]
+输出：0
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int minInOrder(vector<int>& numbers) {
+        int res = numbers[0];
+        for (int i = 1; i < numbers.size(); i++) {
+            if (res > numbers[i]) {
+                res = numbers[i];
+            }
+        }
+        return res;
+    }
+
+    int minArray(vector<int>& numbers) {
+        if (numbers.empty()) {
+            return -1;
+        }
+        int i = 0, j = numbers.size() - 1;
+        // 如果旋转数组本身就是排序数组，数组中的第一个数就是最小的数，可以直接返回。所以我们把mid初始化为i
+        int mid = i;
+        while (numbers[i] >= numbers[j]) {
+            if (j - i == 1) {
+                mid = j;
+                break;
+            }
+
+            mid = (i + j) / 2;
+            // 如果下标i、j和mid都相等，则只能顺序查找
+            if (numbers[i] == numbers[j] && numbers[i] == numbers[mid]) {
+                return minInOrder(numbers);
+            }
+            if (numbers[i] <= numbers[mid]) {
+                i = mid;
+            } else if (numbers[j] >= numbers[mid]) {
+                j = mid;
+            }
+        }
+        return numbers[mid];
+    }
+};
+```
+
