@@ -634,3 +634,60 @@ public:
 // 空间复杂度：O(mn)
 ```
 
+## 剪绳子I
+
+### 题目
+
+给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），每段绳子的长度记为 k[0],k[1]...k[m-1] 。请问 k[0]*k[1]*...*k[m-1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+
+```c++
+示例 1：
+
+输入: 2
+输出: 1
+解释: 2 = 1 + 1, 1 × 1 = 1
+示例 2:
+
+输入: 10
+输出: 36
+解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int cuttingRope(int n) {
+        if (n < 2) {
+            return 0;
+        } else if (n == 2) {
+            return 1;
+        } else if (n == 3) {
+            return 2;
+        }
+
+        vector<int> product(n + 1);
+        product[0] = 0;
+        product[1] = 1;
+        product[2] = 2;
+        product[3] = 3;
+
+        int max = 0;
+        // 求解顺序是自下向上，因此在求f(i)之前，对每一个j而言，f(j)已经求解出来
+        for (int i = 4; i <= n; i++) {
+            max = 0;
+            // 比较每一种可能，求出最大的可能
+            for (int j = 1; j <= i / 2; j++) {
+                if (max < product[j] * product[i - j]) {
+                    max = product[j] * product[i - j];
+                }
+                product[i] = max;
+            }
+        }
+        max = product[n];
+        return max;
+    }
+};
+```
+
