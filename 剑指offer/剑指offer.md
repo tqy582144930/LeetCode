@@ -739,3 +739,48 @@ public:
 };
 ```
 
+## 数值的整次方
+
+### 题目
+
+实现函数double Power(double base, int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
+
+```c++
+示例 1:
+
+输入: 2.00000, 10
+输出: 1024.00000
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    double myPow(double x, int n) {
+        // 如果底数为0，它的任意次方都为0
+        if (x == 0) return 0;
+        long b = n;
+        double res = 1.0;
+        // 考虑次方小于0，先把底数取倒数，再把次方取正数
+        // (5)-1 = 1/(5)1
+        if (b < 0) {
+            x = 1 / x;
+            b = (-b);
+        }
+        // 如果是偶次方：(a)^n = a^(n/2) * a^(n/2)
+        // 如果是奇次方：(a)^n = a^[(n - 1)/2] * a^[(n - 1)/2] * a
+        while (b > 0) { 
+            // 判断次方是奇数还是偶数
+            if ((b & 1) == 1) {
+                res *= x;
+            }
+            x *= x;
+            // 把次方除以二
+            b >>= 1;
+        }
+        return res;
+    }
+};
+```
+
