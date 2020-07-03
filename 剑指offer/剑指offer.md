@@ -784,3 +784,74 @@ public:
 };
 ```
 
+## 打印从1到最大的n位数
+
+### 题目
+
+输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。
+
+```c++
+示例 1:
+
+输入: n = 1
+输出: [1,2,3,4,5,6,7,8,9]
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<int> res;
+    vector<int> printNumbers(int n) {
+        if (n <= 0) {
+            return vector<int>();
+        }
+        vector<char> number(n, '0');
+        while (!increment(number)) {
+            printNumber(number);
+        }
+        return res;
+    }
+
+    bool increment(vector<char>& number) {
+        bool isOverflow = false;
+        int carray = 0;
+        int length = number.size();
+        for (int i = length - 1; i >= 0; i--) {
+            int sum = number[i] - '0' + carray;
+            if (i == length - 1) {
+                sum++;
+            }
+            if (sum >= 10) {
+                if (i == 0) {
+                    isOverflow = true;
+                } else {
+                    carray = 1;
+                    number[i] = sum - 10 + '0';
+                }
+            } else {
+                number[i] = sum + '0';
+                break;
+            }
+        }
+        return isOverflow;
+    }
+
+    void printNumber(vector<char>& number) {
+        string s = "";
+        bool isBegin0 = true;
+        for (char x : number) {
+            if (isBegin0 && x != '0') {
+                isBegin0 = false;
+            }
+            if (!isBegin0) {
+                s += x;
+            }
+        }
+        int num = stoi(s);
+        res.push_back(num);
+    }
+};
+```
+
