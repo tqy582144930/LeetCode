@@ -928,3 +928,102 @@ public:
 };
 ```
 
+## 调整数组顺序使奇数位于偶数前面
+
+### 题目
+
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分。
+
+```c++
+示例：
+
+输入：nums = [1,2,3,4]
+输出：[1,3,2,4] 
+注：[3,1,2,4] 也是正确的答案之一。
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<int> exchange(vector<int>& nums) {
+        if (nums.empty()) {
+            return vector<int>();
+        }
+        int i = 0, j = nums.size() - 1;
+        while (i < j) {
+            while ((i < j) && nums[i] % 2 == 1) {
+                i++;
+            }
+            while ((i < j) && nums[j] % 2 == 0) {
+                j--;
+            }
+            if (i < j) {
+                int temp = nums[i];
+            	nums[i] = nums[j];
+            	nums[j] = temp;
+            }
+        }
+        return nums;
+    }
+};
+```
+
+## 树的字结构
+
+### 题目
+
+输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+
+B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+
+例如:
+给定的树 A:
+
+```c++
+     3
+    / \
+   4   5
+  / \
+ 1   2
+ 
+   4 
+  /
+ 1
+返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
+```
+```c++
+示例 1：
+
+输入：A = [1,2,3], B = [3,1]
+输出：false
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    bool isSubStructure(TreeNode* A, TreeNode* B) {
+        if (A == NULL || B == NULL) {
+            return false;
+        }
+        // 先判断A和B是否相等，接着匹配A->left和B  A->right和B
+        return  (DoesTreeAHaveTreeB(A, B) || isSubStructure(A->left, B) ||
+                isSubStructure(A->right, B));
+    }
+	
+    // 这个函数用来判断两个树对应的节点是否相等
+    bool DoesTreeAHaveTreeB(TreeNode *A, TreeNode *B) {
+        if (B == NULL) {
+            return true;
+        } 
+        if (A == NULL || A->val != B->val) {
+            return false;
+        }
+        return DoesTreeAHaveTreeB(A->left, B->left) && DoesTreeAHaveTreeB(A->right, B->right);
+    }
+};
+```
+
