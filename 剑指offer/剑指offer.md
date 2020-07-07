@@ -1115,3 +1115,111 @@ public:
 };
 ```
 
+## 顺时针打印矩阵
+
+### 题目
+
+输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+
+```c++
+示例 1：
+
+输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[1,2,3,6,9,8,7,4,5]
+示例 2：
+
+输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+输出：[1,2,3,4,8,12,11,10,9,5,6,7]
+
+### 
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if (matrix.size() == 0 || matrix[0].size() == 0) {
+            return {};
+        }
+
+        int rows = matrix.size(), columns = matrix[0].size();
+        vector<int> res;
+        int top = 0, left = 0, bottom = rows - 1, right = columns - 1;
+        while (left <= right && top <= bottom) {
+            for (int i = left; i <= right; i++) {
+                res.push_back(matrix[top][i]);
+            }
+            for (int i = top + 1; i <= bottom; i++) {
+                res.push_back(matrix[i][right]);
+            }
+            if (left < right && top < bottom) {
+                for (int i = right - 1; i > left; i--) {
+                    res.push_back(matrix[bottom][i]);
+                }
+                for (int i = bottom; i > top; i--) {
+                    res.push_back(matrix[i][left]);
+                }
+            }
+            left++;
+            right--;
+            top++;
+            bottom--;
+        }
+        return res;
+    }
+};
+
+// 时间复杂度：O(mn)
+// 空间复杂度：O(1)
+```
+
+## 包含min函数的栈
+
+### 题目
+
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+### 题解
+
+```c++
+class MinStack {
+public:
+    stack<int> m_data, m_min;
+    MinStack() {
+        while(!m_data.empty()) {
+            m_data.pop();
+        }
+        while(!m_min.empty()) {
+            m_min.pop();
+        }
+    }
+    
+    void push(int x) {
+        m_data.push(x);
+        if (m_min.size() == 0 || x < m_min.top()) {
+            m_min.push(x);
+        } else {
+            m_min.push(m_min.top());
+        }
+    }
+    
+    void pop() {
+        assert(m_data.size() > 0 && m_min.size() > 0);
+
+        m_data.pop();
+        m_min.pop();
+    }
+    
+    int top() {
+        return m_data.top();
+    }
+    
+    int min() {
+        assert(m_min.size() > 0);
+        return m_min.top();
+    }
+};
+```
+
