@@ -1260,3 +1260,117 @@ public:
 };
 ```
 
+## 之子型打印二叉树
+
+### 题目
+
+请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。
+
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+
+    	3
+       / \
+      9  20
+        /  \
+       15   7
+    返回其层次遍历结果：
+    
+    [
+      [3],
+      [20,9],
+      [15,7]
+    ]
+### 题解
+
+```c++
+// 使用双端队列
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        if (root == NULL) {
+            return vector<vector<int>>();
+        }
+        deque<TreeNode *> deq;
+        deq.push_front(root);
+        bool leftOrRight = true;
+        vector<vector<int>> res;
+        while (!deq.empty()) {
+            int size = deq.size();
+            vector<int> temp;
+            if (leftOrRight) {
+                for (int i = 0; i < size; i++) {
+                    TreeNode *ptr = deq.front();
+                    deq.pop_front();
+                    temp.push_back(ptr->val);
+                    if (ptr->left != NULL) {
+                        deq.push_back(ptr->left);
+                    }
+                    if (ptr->right != NULL) {
+                        deq.push_back(ptr->right);
+                    }
+                }
+            } else {
+                for (int i = 0; i < size; i++) {
+                    TreeNode *ptr = deq.back();
+                    deq.pop_back();
+                    temp.push_back(ptr->val);
+                    if (ptr->right != NULL) {
+                        deq.push_front(ptr->right);
+                    }
+                    if (ptr->left != NULL) {
+                        deq.push_front(ptr->left);
+                    }
+                }
+            }
+            res.push_back(temp);
+            leftOrRight = !leftOrRight;
+        }
+        return res;
+    }
+};
+// 时间复杂度：O(N)
+// 空间复杂度：O(N):最差情况下，即当树为满二叉树时，最多有 N/2N/2 个树节点 同时 在 deque 中，使用 O(N)O(N) 大小的额外空间。
+
+// 使用两个栈
+void PrintByZ(BtNode *ptr)
+{
+	if (ptr == NULL) {
+		return;
+	}
+	stack<BtNode *> st1;
+	stack<BtNode *> st2;
+	bool leftOrRight = true;
+	st1.push(ptr);
+	while (!st1.empty() || !st2.empty()) {
+		if (leftOrRight) {
+			while (!st1.empty()) {
+				BtNode * node = st1.top();
+				st1.pop();
+				cout << node->data << " ";
+				if (node->leftChild != NULL) {
+					st2.push(node->leftChild);
+				}
+				if (node->rightChild != NULL) {
+					st2.push(node->rightChild);
+				}
+			}
+		}
+		else {
+			while (!st2.empty()) {
+				BtNode * node = st2.top();
+				st2.pop();
+				cout << node->data << " ";
+				if (node->rightChild != NULL) {
+					st1.push(node->rightChild);
+				}
+				if (node->leftChild != NULL) {
+					st1.push(node->leftChild);
+				}
+			}
+		}
+		leftOrRight = !leftOrRight;
+	}
+}
+```
+
