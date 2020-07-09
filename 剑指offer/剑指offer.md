@@ -1374,3 +1374,115 @@ void PrintByZ(BtNode *ptr)
 }
 ```
 
+## 二叉搜索树的后续遍历序列
+
+### 题目
+
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。
+
+参考以下这颗二叉搜索树：
+
+```c++
+	 5
+	/ \
+   2   6
+  / \
+ 1   3
+示例 1：
+
+输入: [1,6,3,2,5]
+输出: false
+示例 2：
+
+输入: [1,3,2,6,5]
+输出: true
+```
+### 题解
+
+```c++
+class Solution {
+public:
+    bool verifyPostorder(vector<int>& postorder) {
+        if (postorder.empty()) {
+            return true;
+        }
+        return recur(postorder, 0, postorder.size() - 1);
+    }
+
+    bool recur(vector<int>& postorder, int left, int right) {
+        if (left >= right) {
+            return true;
+        }
+        int p = left;
+        while (postorder[p] < postorder[right]) {
+            p++;
+        }
+        int m = p;
+        while (postorder[p] > postorder[right]) {
+            p++;
+        }
+        // p=j ： 判断 此树 是否正确。
+		// recur(i, m - 1)： 判断 此树的左子树 是否正确。
+		// recur(m, j - 1)： 判断 此树的右子树 是否正确。
+        return p == right && recur(postorder, left, m - 1) && recur(postorder, m, right - 1);
+    }
+};
+```
+
+## 二叉树中和为某一个值的路径
+
+### 题目
+
+输入一棵二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从树的根节点开始往下一直到叶节点所经过的节点形成一条路径。
+
+ 
+
+示例:
+给定如下二叉树，以及目标和 sum = 22，
+
+```c++
+          5
+         / \
+        4   8
+       /   / \
+      11  13  4
+     /  \    / \
+    7    2  5   1
+    
+返回:
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+```
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> path;
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        recur(root, sum);
+        return res;
+    }
+
+    void recur(TreeNode *root, int sum) {
+        if (root == NULL) {
+            return;
+        }
+        path.push_back(root->val);
+        sum -= root->val;
+        // 如果是叶子结点并且sum为0，就添加这个path
+        if (sum == 0 && root->left == NULL && root->right == NULL) {
+            res.push_back(path);
+        }
+        // 接着遍历左节点
+        // 右节点
+        recur(root->left, sum);
+        recur(root->right, sum);
+        path.pop_back();
+    }
+};
+```
+
