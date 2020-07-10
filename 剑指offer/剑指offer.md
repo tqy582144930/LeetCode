@@ -1486,3 +1486,95 @@ public:
 };
 ```
 
+## 二叉搜索树与双向链表
+
+### 题目
+
+输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
+
+### 题解
+
+```c++
+
+```
+
+## 序列化二叉树
+
+### 题目
+
+请实现两个函数，分别用来序列化和反序列化二叉树。
+
+示例: 
+
+你可以将以下二叉树：
+
+```c++
+	1
+   / \
+  2   3
+     / \
+    4   5
+
+序列化为 "[1,2,3,null,null,4,5]"
+```
+### 题解
+
+```c++
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        string res;
+        dfs(root, res);
+        return res;
+    }
+
+    void dfs(TreeNode *root, string &res) {
+        if (root == NULL) {
+            res += "null ";
+            return;
+        }
+        res += to_string(root->val) + ' ';
+        dfs(root->left, res);
+        dfs(root->right, res);
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        int index = 0;
+        return dfs_deserialize(data, index);
+    }
+
+    TreeNode *dfs_deserialize(string &data, int &index) {
+        if (index > data.size()) {
+            return NULL;
+        }
+        // 如果字符为null，返回null
+        if (data[index] == 'n') {
+            index += 5;
+            return NULL;
+        }
+        int val = 0, sign = 1;
+        // 如果是负数，需要跳过负号
+        if (data[index] == '-') {
+            sign = -1;
+            index++;
+        }
+        // 把字符转成数字
+        while (data[index] != ' ') {
+            val = val * 10 + data[index] - '0';
+            index++;
+        }
+        val *= sign;
+        index++;
+
+        // 构建二叉树
+        TreeNode *root = new TreeNode(val);
+        root->left = dfs_deserialize(data, index);
+        root->right = dfs_deserialize(data, index);
+        return root;
+    }
+};
+```
+
