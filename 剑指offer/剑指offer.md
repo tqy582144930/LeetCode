@@ -1578,3 +1578,50 @@ public:
 };
 ```
 
+## 字符串的排列
+
+### 题目
+
+输入一个字符串，打印出该字符串中字符的所有排列。
+
+你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。
+
+```c++
+示例:
+
+输入：s = "abc"
+输出：["abc","acb","bac","bca","cab","cba"]
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<string> result;
+    vector<string> permutation(string s) {
+        dfs(s, 0);
+        return result;
+    }
+    void dfs(string& s, int pos) {
+        if (pos >= s.size()) {
+            result.push_back(s);
+            return;
+        }
+        for (int i = pos; i < s.size(); ++i) {
+            if (judge(s, pos, i)) continue;   // 如果pos和i之间有字符等于s[i]，则跳过。
+            swap(s[pos], s[i]);
+            dfs(s, pos+1);
+            swap(s[pos], s[i]);
+        }
+    }
+
+    bool judge(string& s, int start, int end) {
+        for (int i = start; i < end; ++i) {
+            if (s[i] == s[end]) return true;
+        }
+        return false;
+    }
+};
+```
+
