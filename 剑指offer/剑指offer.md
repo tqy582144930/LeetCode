@@ -1625,3 +1625,177 @@ public:
 };
 ```
 
+## 数组中出现次数超过一半的数字
+
+### 题目
+
+数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+
+ 
+
+你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+
+```c++
+示例 1:
+
+输入: [1, 2, 3, 2, 2, 2, 5, 4, 2]
+输出: 2
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        if (nums.empty()) {
+            return -1;
+        }
+        int result = nums[0];
+        int times = 1;
+        for (int i = 1; i < nums.size(); i++) {
+            if (times == 0) {
+                result = nums[i];
+                times = 1;
+            } else if (nums[i] == result) {
+                times++;
+            } else {
+                times--;
+            }
+        }
+        return result;
+    }
+};
+```
+
+## 数组中第k小的树
+
+### 题目
+
+输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+
+```c++
+示例 1：
+
+输入：arr = [3,2,1], k = 2
+输出：[1,2] 或者 [2,1]
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        if (arr.size() == 0 || k == 0) {
+            return {};
+        }
+        vector<int> res(k, 0);
+        priority_queue<int> Q;
+        for (int i = 0; i < k; i++) {
+            Q.push(arr[i]);
+        }
+        for (int i = k; i < arr.size(); i++) {
+            if (arr[i] < Q.top()) {
+                Q.pop();
+                Q.push(arr[i]);
+            }
+        }
+        for (int i = 0; i < k; i++) {
+            res[i] = Q.top();
+            Q.pop();
+        }
+        return res;
+    }
+};
+```
+
+## 数据流的中位数
+
+### 题目
+
+如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。
+
+```c++
+例如，
+
+[2,3,4] 的中位数是 3
+
+[2,3] 的中位数是 (2 + 3) / 2 = 2.5
+
+设计一个支持以下两种操作的数据结构：
+
+void addNum(int num) - 从数据流中添加一个整数到数据结构中。
+double findMedian() - 返回目前所有元素的中位数。
+```
+
+### 题解
+
+```c++
+class MedianFinder {
+public:
+    priority_queue<int> bigQueue;
+    priority_queue<int,vector<int>, greater<int> > smallQueue;
+    
+    void addNum(int num) {
+        if (smallQueue.size() != bigQueue.size()) {
+            smallQueue.push(num);
+            bigQueue.push(smallQueue.top());
+            smallQueue.pop();
+        } else {
+            bigQueue.push(num);
+            smallQueue.push(bigQueue.top());
+            bigQueue.pop();
+        }
+    }
+    
+    double findMedian() {
+        return bigQueue.size() != smallQueue.size() ? (double)smallQueue.top() : (double)(bigQueue.top() + smallQueue.top()) / 2;
+    }
+};
+```
+
+[数据流的中位数](https://leetcode-cn.com/problems/shu-ju-liu-zhong-de-zhong-wei-shu-lcof/solution/mian-shi-ti-41-shu-ju-liu-zhong-de-zhong-wei-shu-y/)
+
+## 连续子数组的最大和
+
+### 题目
+
+输入一个整型数组，数组里有正数也有负数。数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
+
+要求时间复杂度为O(n)。
+
+```c++
+示例1:
+
+输入: nums = [-2,1,-3,4,-1,2,1,-5,4]
+输出: 6
+解释: 连续子数组 [4,-1,2,1] 的和最大，为 6。
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        if (nums.size() == 0) {
+            return INT_MIN;
+        }
+        int curSum = 0;
+        int sum = INT_MIN;
+        for (int i = 0; i < nums.size(); i++) {
+            if (curSum < 0) {
+                curSum = nums[i];
+            } else {
+                curSum += nums[i];
+            }
+            if (curSum > sum) {
+                sum = curSum;
+            }
+        }
+        return sum;
+    }
+};
+```
+
