@@ -1872,3 +1872,96 @@ public:
 };
 ```
 
+## 礼物的最大价值
+
+### 题目
+
+在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移动一格、直到到达棋盘的右下角。给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？
+
+```c++
+示例 1:
+
+输入: 
+[
+  [1,3,1],
+  [1,5,1],
+  [4,2,1]
+]
+输出: 12
+解释: 路径 1→3→5→2→1 可以拿到最多价值的礼物
+```
+
+### 题解
+
+```c++
+// 用一个矩阵来保存数据
+class Solution {
+public:
+    int maxValue(vector<vector<int>>& grid) {
+        int rows = grid.size(), cols = grid[0].size();
+        vector<vector<int>> dp(rows, vector<int>(cols, 0));
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int left = 0, up = 0;
+                if (i > 0) {
+                    up = dp[i - 1][j];
+                }
+                if (j > 0) {
+                    left = dp[i][j - 1];
+                }
+                dp[i][j] = max(left, up) + grid[i][j];
+            }
+        }
+        return dp[rows - 1][cols - 1];
+    }
+};
+
+// 可以优化为一个一维数组保存数据
+```
+
+## 最长不含重复字符的子字符串
+
+### 题目
+
+请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+
+```c++
+示例 1:
+
+输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int curLength = 0, maxLength = 0;
+        vector<int> position(26, -1);
+
+        for (int i = 0; i < s.size(); i++) {
+            int prevIndex = position[s[i] - 'a'];
+            // 如果第i个字符之前没有出现过，f(i) = f(i) + 1;
+            // 如果第i个字符之前出现过，但是距离上一次出现的距离d大于f(i - 1)的大小，说明不在此次范围中，所以f(i) = f(i) + 1;
+            if (prevIndex < 0 || i - prevIndex > curLength) {
+                curLength++;
+            } else {
+                // 这里说明第i个字符出现过，距离上一次出现的距离d小于f(i - 1)的大小，说明在此次集合中
+                // 所以我们需要更换集合的左边界，刚好为他们出现的距离d
+                if (curLength > maxLength) {
+                    maxLength = curLength;
+                }
+                curLength = i - prevIndex;
+            }
+            // 更新该字符出现的位置
+            position[s[i] - 'a'] = i;
+        }
+
+        return maxLength;
+    }
+};
+```
+
