@@ -1965,3 +1965,40 @@ public:
 };
 ```
 
+## 丑数
+
+### 题目
+
+我们把只包含质因子 2、3 和 5 的数称作丑数（Ugly Number）。求按从小到大的顺序的第 n 个丑数。
+
+ 
+
+```c++
+示例:
+
+输入: n = 10
+输出: 12
+解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        int a = 0, b = 0, c = 0;
+        vector<int> dp(n, 0);
+        dp[0] = 1;
+        for (int i = 1; i < n; i++) {
+            int n1 = dp[a] * 2, n2 = dp[b] * 3, n3 = dp[c] * 5;
+            dp[i] = min(min(n1, n2), n3);
+            if (dp[i] == n1) a++;
+            if (dp[i] == n2) b++;
+            if (dp[i] == n3) c++; 
+        }
+        return dp[n - 1];
+    }
+};
+```
+
