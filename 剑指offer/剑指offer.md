@@ -2002,3 +2002,39 @@ public:
 };
 ```
 
+## 第一次只出现一次的字符
+
+### 题目
+
+在字符串 s 中找出第一个只出现一次的字符。如果没有，返回一个单空格。 s 只包含小写字母。
+
+```c++
+示例:
+
+s = "abaccdeff"
+返回 "b"
+
+s = "" 
+返回 " "
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    char firstUniqChar(string s) {
+        vector<int> table(256, 0);
+        for (auto x : s) {
+            table[x]++;
+        }
+        for (auto x : s) {
+            if (table[x] == 1) {
+                return x;
+            }
+        }
+        return ' ';
+    }
+};
+```
+
