@@ -2038,3 +2038,89 @@ public:
 };
 ```
 
+## 在排序数组中查找数字
+
+### 题目
+
+统计一个数字在排序数组中出现的次数。 
+
+```c++
+示例 1:
+
+输入: nums = [5,7,7,8,8,10], target = 8
+输出: 2
+示例 2:
+
+输入: nums = [5,7,7,8,8,10], target = 6
+输出: 0
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int helper(vector<int> &nums, int target) {
+        int i = 0, j = nums.size() - 1;
+        while (i <= j) {
+            int m = (i + j) / 2;
+            if (nums[m] <= target) {
+                i = m + 1;
+            } else {
+                j = m - 1;
+            }
+        }
+        return i;
+    }
+    int search(vector<int>& nums, int target) {
+        return helper(nums, target) - helper(nums, target - 1);
+    }
+};
+```
+
+## 二叉搜索树中第K大的数
+
+### 题目
+
+给定一棵二叉搜索树，请找出其中第k大的节点。
+
+ 
+
+```c++
+示例 1:
+
+输入: root = [3,1,4,null,2], k = 1
+   3
+  / \
+ 1   4
+  \
+   2
+输出: 4
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int num = 0, res;
+    int kthLargest(TreeNode* root, int k) {
+        num = k;
+        dfs(root);
+        return res;
+    }
+
+    void dfs(TreeNode *root) {
+        if (root == NULL) return;
+        dfs(root->right);
+        if (num == 0) {
+            return;
+        }
+        if (--num == 0) {
+            res = root->val;
+        }
+        dfs(root->left);
+    }
+};
+```
+
