@@ -2124,3 +2124,70 @@ public:
 };
 ```
 
+## 二叉树的深度
+
+### 题目
+
+输入一棵二叉树的根节点，求该树的深度。从根节点到叶节点依次经过的节点（含根、叶节点）形成树的一条路径，最长路径的长度为树的深度。
+
+例如：
+
+给定二叉树 [3,9,20,null,null,15,7]，
+
+```c++
+  3
+ / \
+  9  20
+    /  \
+   15   7
+返回它的最大深度 3 。
+```
+### 题解
+
+```c++
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if (root == NULL) return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+    }
+};
+```
+
+## 判断是否是平衡二叉树
+
+### 题目
+
+输入一棵二叉树的根节点，判断该树是不是平衡二叉树。如果某二叉树中任意节点的左右子树的深度相差不超过1，那么它就是一棵平衡二叉树。
+
+示例 1:
+
+给定二叉树 [3,9,20,null,null,15,7]
+
+```c++
+  3
+ / \
+  9  20
+    /  \
+   15   7
+```
+### 题解
+
+```c++
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        return recur(root) != -1;
+    }
+
+    int recur(TreeNode *root) {
+        if (root == NULL) return 0;
+        int left = recur(root->left);
+        if (left == -1) return -1;
+        int right = recur(root->right);
+        if (right == -1) return -1;
+        return abs(left - right) < 2 ? max(left, right) + 1 : -1;
+    }
+};
+```
+
