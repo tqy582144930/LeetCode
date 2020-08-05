@@ -2232,3 +2232,76 @@ public:
 };
 ```
 
+## 数组中数字出现的次数
+
+### 题目
+
+在一个数组 nums 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+
+ 
+
+```c++
+示例 1：
+
+输入：nums = [3,4,3,3]
+输出：4
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        vector<int> count(32, 0);
+        for (int num : nums) {
+            for (int j = 0; j < 32; j++) {
+                count[j] += num & 1;
+                num >>= 1;
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < 32; i++) {
+            res <<= 1;
+            res += count[31 - i] % 3;
+        }
+        return res;
+    }
+};
+```
+
+## 和为s的两个数
+
+### 题目
+
+输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可。
+
+```c++
+示例 1：
+
+输入：nums = [2,7,11,15], target = 9
+输出：[2,7] 或者 [7,2]
+```
+
+### 题解
+
+```c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int i = 0, j = nums.size() - 1;
+        while (i < j) {
+            int sum = nums[i] + nums[j];
+            if (sum == target) {
+                return {nums[i], nums[j]};
+            } else if (sum > target) {
+                j--;
+            } else {
+                i++;
+            }
+        }
+        return {0, 0};
+    }
+};
+```
+
